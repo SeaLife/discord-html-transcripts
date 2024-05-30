@@ -341,6 +341,10 @@ public class DiscordHtmlTranscripts {
     }
 
     public InputStream generateFromMessages(Collection<Message> messages) throws IOException {
+        return generateFromMessages(messages, true);
+    }
+
+    public InputStream generateFromMessages(Collection<Message> messages, boolean ignoreBotMessages) throws IOException {
         InputStream htmlTemplate = findFile();
         if (messages.isEmpty()) {
             throw new IllegalArgumentException("No messages to generate a transcript from");
@@ -361,7 +365,7 @@ public class DiscordHtmlTranscripts {
                 .sorted(Comparator.comparing(ISnowflake::getTimeCreated))
                 .toList()) {
 
-            if (message.getAuthor().isBot()) {
+            if (message.getAuthor().isBot() && ignoreBotMessages) {
                 continue;
             }
             // create message group
