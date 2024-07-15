@@ -310,7 +310,7 @@ public class DiscordHtmlTranscripts {
 
         //        System.out.println("REFERENCE MSG " + referenceMessage.getContentDisplay());
         reference.html("<img class=\"chatlog__reference-avatar\" src=\""
-                + author.getAvatarUrl() + "\" alt=\"Avatar\" loading=\"lazy\">" +
+                + author.getEffectiveAvatarUrl() + "\" alt=\"Avatar\" loading=\"lazy\">" +
                 "<span class=\"chatlog__reference-name\" title=\"" + author.getName()
                 + "\" style=\"color: " + color + "\">" + author.getName() + "\"</span>" +
                 "<div class=\"chatlog__reference-content\">" +
@@ -341,7 +341,7 @@ public class DiscordHtmlTranscripts {
     }
 
     public InputStream generateFromMessages(Collection<Message> messages) throws IOException {
-        return generateFromMessages(messages, true);
+        return generateFromMessages(messages, false);
     }
 
     public InputStream generateFromMessages(Collection<Message> messages, boolean ignoreBotMessages) throws IOException {
@@ -392,9 +392,9 @@ public class DiscordHtmlTranscripts {
 
             if (author != null) {
                 authorName.attr("title", Objects.requireNonNullElse(author.getGlobalName(), author.getEffectiveName()));
-                authorName.text(author.getName());
+                authorName.text(Objects.requireNonNullElse(author.getName(), author.getEffectiveName()));
                 authorName.attr("data-user-id", author.getId());
-                authorAvatar.attr("src", Objects.requireNonNull(author.getAvatarUrl()));
+                authorAvatar.attr("src", author.getEffectiveAvatarUrl());
             } else {
                 // Handle the case when author is null (e.g., when the message is from a bot)
                 authorName.attr("title", "Bot");
